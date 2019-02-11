@@ -19,12 +19,11 @@ namespace Task1
         static void Main(string[] args)
         {
             string ss = Console.ReadLine();
-            string s = Console.ReadLine();    //создаю один стринг чтобы вводить размер массива и второй чтобы
-            int n = int.Parse(ss);
-            string[] a = s.Split();                                 //вводить его значения потом создаю массив и добавляю 
-            for(int i = 0; i < a.Length ; i++)
+            string s = Console.ReadLine();                    //создаю один стринг чтобы вводить размер массива и второй чтобы  
+            string[] a = s.Split();                           //вводить его элементы потом создаю массив и добавляю 
+            for(int i = 0; i < a.Length ; i++)                //каждый элемент превращаю в числа и вывожу через пробел      
             {
-                int b = int.Parse(a[i]);                            //каждый элемент превращаю в числа и вывожу через пробел
+                int b = int.Parse(a[i]);                            
                 if (isPrime(b) == true && b!=1)
                 {
                     Console.Write(a[i] + " ");

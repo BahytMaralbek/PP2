@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task4", "ApituExamole\Task4.csproj", "{FFFD01C4-85BE-4536-B433-CE93FA9C6000}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFFD01C4-85BE-4536-B433-CE93FA9C6000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFD01C4-85BE-4536-B433-CE93FA9C6000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFD01C4-85BE-4536-B433-CE93FA9C6000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFD01C4-85BE-4536-B433-CE93FA9C6000}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB1C465A-51B9-4CB8-9DC1-D8692CE54C3E}
+	EndGlobalSection
+EndGlobal
