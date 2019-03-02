@@ -55,13 +55,13 @@ namespace Ex18
     }
     class Program
     {
-        static bool exist(string path, int modeNum)
-        {
-            if ((modeNum == 1 && new DirectoryInfo(path).Exists) || (modeNum == 2 && new FileInfo(path).Exists))
-                return true;
-            else
-                return false;
-        }
+            static bool exist(string path, int modeNum)
+            {
+                if ((modeNum == 1 && new DirectoryInfo(path).Exists) || (modeNum == 2 && new FileInfo(path).Exists))
+                    return true;
+                else
+                    return false;
+            }
         static void Main(string[] args)
         {
             DirectoryInfo dirI = new DirectoryInfo(@"C:\Users\User\easy.cpp");
