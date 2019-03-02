@@ -9,9 +9,8 @@ namespace Task2
 {
     public class Mark
     {
-        public int point = 0;
-
-        public int GetMark
+        public int point = 100;
+        public int getLetter
         {
             get
             {
@@ -25,16 +24,13 @@ namespace Task2
                     point = 0;
                 else
                     point = value;
-                    
             }
         }
         public Mark() { }
-
         public Mark(int point2)
         {
             point = point2;
         }
-            
         public override string ToString()
         {
             string s = "F";
@@ -78,41 +74,36 @@ namespace Task2
             {
                 s = "D";
             }
-            
             return s;
         }
-        
     }
     class Program
-    {
+    { 
         public static void Serialize()
         {
             List<Mark> marks = new List<Mark>();
-            for(int i = 0; i < 10; i++)
-            {
-                marks.Add(new Mark(46 + (5 * i)));
-            }
-            XmlSerializer xml = new XmlSerializer(typeof(List<Mark>));
             using(FileStream fs = new FileStream("Marks.xml", FileMode.Create, FileAccess.Write))
             {
-                xml.Serialize(fs , marks);
+                XmlSerializer xs = new XmlSerializer(typeof(List<Mark>));
+                xs.Serialize(fs, marks);
             }
         }
         public static void Deserialize()
         {
-            using (FileStream fs = new FileStream("Marks.xml", FileMode.Open, FileAccess.Read))
+            using(FileStream fs = new FileStream("Marks.xml", FileMode.Open, FileAccess.Read))
             {
-                XmlSerializer xml = new XmlSerializer(typeof(List<Mark>));
-                List<Mark> marks = xml.Deserialize(fs) as List<Mark>;
-                foreach (var x in marks)
+                XmlSerializer xs = new XmlSerializer(typeof(List<Mark>));
+                List<Mark> marks = xs.Deserialize(fs) as List<Mark>;
+                foreach(var x in marks)
                 {
                     Console.WriteLine("Mark:{0}", x.ToString());
                 }
             }
+            
         }
         static void Main(string[] args)
         {
-            Serialize();
+            //Serialize();
             Deserialize();
         }
     }
