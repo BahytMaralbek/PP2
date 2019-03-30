@@ -63,7 +63,7 @@ namespace Snake
         public override void Draw()
         {
             base.Draw();
-            Thread.Sleep(100);
+            Thread.Sleep(150);
         }
     }
 }

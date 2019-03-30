@@ -9,63 +9,36 @@ namespace Snake
 {
     class Wall:GameObject
     {
-        public enum Levels
+        public string levelName
         {
-            First,
-            Second,
-            Third 
+            get;
+            set;
         }
-        public int l = 1;
-        public int L
+        public Wall(char sign , int levelNumber) : base(sign)
         {
-            get
-            {
-                return l;
-            }
-            set
-            {
-                l = value;
-            }
+            LoadLevel(levelNumber);
+            
         }
-        Levels level = Levels.First;
-        public Wall(char sign) : base(sign)
-        {
-            LoadLevel(L);
-        }
-        public void NextLevel()
-        {
-            if(level == Levels.First)
-            {
-                level = Levels.Second;
-                l = 2;
-            }else if(level == Levels.Second)
-            {
-                level = Levels.Third;
-                l = 3;
-            }
-            Clear();
-            LoadLevel(L);
-            Draw();
-        }
+      
         public void LoadLevel(int level)
         {
-            string name = string.Format("Levels/Level{0}.txt", L);
+            string name = string.Format("Levels/Level{0}.txt", level);
             using (StreamReader sr = new StreamReader(name))
             {
-                string[] rows = sr.ReadToEnd().Split('\n');
-                for (int i = 0; i < rows.Length; i++)
+                int r = 0;
+                while (!sr.EndOfStream)
                 {
-                    for (int j = 0; j < rows[i].Length; j++)
+                    string line = sr.ReadLine();
+                    for (int c = 0; c < line.Length; c++)
                     {
-                        if (rows[i][j] == '#')
+                        if (line[c] == '#')
                         {
-                            body.Add(new Point(j, i));
+                                body.Add(new Point(c, r));
                         }
                     }
+                    r++;
                 }
             }
-            Console.SetCursorPosition(15, 40);
-            Console.Write("Level:{0}", L);
         }
     }
 }

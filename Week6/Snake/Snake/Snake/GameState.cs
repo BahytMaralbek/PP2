@@ -3,38 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
+using System.Xml.Serialization;
 namespace Snake
 {
     class GameState
     {
         Worm worm = new Worm('O');
         Food food = new Food('@');
-        Wall wall = new Wall('#');
+        Wall wall;
         public bool IsAlive = true;
         Player player = new Player();
+        ScoreLevel ScoreLevel = new ScoreLevel();
         ConsoleKey consoleKeyInfo = new ConsoleKey();
+        public int LevelNumber { get; set; } = 0;
         public GameState()
         {
             Console.SetWindowSize(40, 40);
             Console.SetBufferSize(40, 40);
             Console.CursorVisible = false;
-        }
-        public void PlayerName()
-        {
-            Console.SetCursorPosition(10, 20);
-            Console.Write("Player name:");
-            player.Name = Console.ReadLine();
-            Console.Clear();
-            wall.Draw();
+            player.AskName();
         }
         public void Draw()
         {
             if (IsAlive)
             {
+                wall = new Wall('#', ScoreLevel.Level);
                 worm.Draw();
+                ScoreLevel.Draw();
                 food.Draw();
-                player.s.Draw();
+                wall.Draw();
             }
         }
 
@@ -46,20 +44,33 @@ namespace Snake
             }
             else if (worm.CheckIntersection(food.body))
             {
-                player.s.Scores += 100;
-                worm.Eat(food.body);
-                if (player.s.Scores % 200 == 0)
-                {
-                    wall.NextLevel();
-                }
+             
+                ScoreLevel.Score += 100;
+                player.Score = ScoreLevel.Score;
                 food.Generate(wall.body, worm.body);
+                if (ScoreLevel.Score == 300)
+                {
+                    wall.Clear();
+                    ScoreLevel.Level = 2;
+                    wall = new Wall('#', ScoreLevel.Level);
+                    wall.Draw();
+                }
+                else if (ScoreLevel.Score == 600)
+                {
+                    wall.Clear();
+                    ScoreLevel.Level = 3;
+                    wall = new Wall('#', ScoreLevel.Level);
+                    wall.Draw();
+                }
+                worm.Eat(food.body);
             }
           
         }
 
         public void ProcessKey()
         {
-            if (Console.KeyAvailable) consoleKeyInfo = Console.ReadKey(true).Key;
+            if (Console.KeyAvailable)
+                consoleKeyInfo = Console.ReadKey(true).Key;
             switch (consoleKeyInfo)
             {
                 case ConsoleKey.UpArrow:
@@ -111,11 +122,23 @@ namespace Snake
                     }
                     break;
                 case ConsoleKey.Escape:
+                    Save(player);
                     GameOver();
                     break;
 
             }
             CheckCollision();
+        }
+        public void Save(Player player)
+        { 
+            string path = "C:/Users/User/PP2/Week6/Table";
+            string s = string.Format("{0}.xml", player.Name);
+            string directory = Path.Combine(path, s);
+            XmlSerializer xs = new XmlSerializer(typeof(Player));
+            using (FileStream fs = new FileStream(directory, FileMode.Create, FileAccess.Write))
+            { 
+                xs.Serialize(fs, player);
+            }
         }
         public void GameOver()
         {

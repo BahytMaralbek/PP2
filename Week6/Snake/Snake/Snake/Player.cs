@@ -8,7 +8,19 @@ namespace Snake
 {
     public class Player
     {
-        string name;
+         string name;
+         int score;
+        public int Score
+        {
+            get
+            {
+                return score;
+            }
+            set
+            {
+                score = value;
+            }
+        }
         public string Name {
             get
             {
@@ -19,6 +31,19 @@ namespace Snake
                 name = value;
             }
         }
-        public Score s = new Score();
+        public Player() { }
+
+        public Player(string name, int score)
+        {
+            this.name = name;
+            this.score = score;
+        }
+        public void AskName()
+        {
+            Console.SetCursorPosition(10, 20);
+            Console.Write("Enter your name:" + Name);
+            Name = Console.ReadLine();
+            Console.Clear();
+        }
     }
 }

@@ -6,24 +6,23 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    public class Score
+    public class ScoreLevel
     {
-        public int score;
-        public int Scores
+        int score;
+        int level;
+        public int Score { get { return score; } set { score = value; } }
+        public int Level { get { return level; } set { level = value; } }
+        public ScoreLevel()
         {
-            get
-            {
-                return score;
-            }
-            set
-            {
-                score = value;
-            }
+            score = 0;
+            level = 1;
         }
         public void Draw()
         {
             Console.SetCursorPosition(0, 39);
             Console.Write("Score: {0}", score);
+            Console.SetCursorPosition(15, 39);
+            Console.Write("Level {0}", level);
         }
     }
 }
