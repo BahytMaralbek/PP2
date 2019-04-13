@@ -15,7 +15,6 @@ namespace Snake
         public bool IsAlive = true;
         Player player = new Player();
         ScoreLevel ScoreLevel = new ScoreLevel();
-        ConsoleKey consoleKeyInfo = new ConsoleKey();
         public int LevelNumber { get; set; } = 0;
         public GameState()
         {
@@ -67,11 +66,9 @@ namespace Snake
           
         }
 
-        public void ProcessKey()
+        public void ProcessKey(ConsoleKeyInfo consoleKeyInfo)
         {
-            if (Console.KeyAvailable)
-                consoleKeyInfo = Console.ReadKey(true).Key;
-            switch (consoleKeyInfo)
+            switch (consoleKeyInfo.Key)
             {
                 case ConsoleKey.UpArrow:
                     if (worm.direction != Worm.Direction.DOWN)

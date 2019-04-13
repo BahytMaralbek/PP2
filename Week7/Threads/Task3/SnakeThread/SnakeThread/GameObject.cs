@@ -6,7 +6,30 @@ using System.Threading.Tasks;
 
 namespace SnakeThread
 {
-    class GameObject
+    abstract class GameObject
     {
+        public List<Point> body = new List<Point>();
+        protected char sign;
+
+        public GameObject(char sign)
+        {
+            this.sign = sign;
+        }
+        public virtual void Draw()
+        {
+            foreach (Point p in body)
+            {
+                Console.SetCursorPosition(p.X, p.Y);
+                Console.Write(sign);
+            }
+        }
+        public virtual void Clear()
+        {
+            foreach (Point p in body)
+            {
+                Console.SetCursorPosition(p.X, p.Y);
+                Console.Write("  ");
+            }
+        }
     }
 }

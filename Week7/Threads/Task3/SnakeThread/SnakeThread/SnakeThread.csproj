@@ -43,11 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Food.cs" />
+    <Compile Include="GameObject.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScoreLevel.cs" />
+    <Compile Include="Wall.cs" />
+    <Compile Include="Worm.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Levels2\Level11.txt" />
+    <Content Include="Levels2\Level22.txt" />
+    <Content Include="Levels2\Level33.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
