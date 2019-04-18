@@ -7,17 +7,30 @@ using System.Threading.Tasks;
 namespace calc
 {
     class Rules
-    { 
-        public static bool IsXPowerY(string msg)
+    {
+        public static bool IsPercentSign(string msg)
         {
-            if(msg == "x^y")
+            if (msg == "%")
             {
                 return true;
             }
-            else
+            return false;
+        }
+        public static bool IsDivisibleSign(string msg)
+        {
+            if(msg == "/")
             {
-                return false;
+                return true;
             }
+            return false;
+        }
+        public static bool IsXPowerY(string msg)
+        {
+            if (msg == "x^y")
+            {
+                return true;
+            }
+            return false;
         }
         public static bool IsSquareSign(string msg)
         {
@@ -25,10 +38,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false; 
         }
         public static bool IsOneOverXSign(string msg)
         {
@@ -36,10 +46,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public static bool IsPlusMinus(string msg)
         {
@@ -47,10 +54,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public static bool IsDEL(string msg)
         {
@@ -58,10 +62,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public static bool IsRootSign(string msg)
         {
@@ -69,10 +70,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public static bool IsOperator(string msg)
         {
@@ -111,10 +109,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         public static bool IsOff(string msg)
         {
@@ -123,10 +118,7 @@ namespace calc
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

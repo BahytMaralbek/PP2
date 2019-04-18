@@ -23,13 +23,17 @@ namespace calc
         ShowResultDelegate resultDelegate;
         CalcState currentState = CalcState.Zero;
         string tempNumber;
+        string tempNumber2;
         string resultNumber;
         string operation;
+        string operation2;
         public Brain(ShowResultDelegate resultDelegate)
         {
             this.resultDelegate = resultDelegate;
             tempNumber = "";
+            tempNumber2 = "";
             operation = "";
+            operation2 = "";
             resultDelegate("0");
         }
         public void Process(string msg)
@@ -72,6 +76,7 @@ namespace calc
                 tempNumber = "";
                 resultNumber = "";
                 operation = "";
+                
             }
             else
             {
@@ -91,6 +96,10 @@ namespace calc
                 {
                     tempNumber = "0";
                     Compute(true, msg);
+                }
+                else if (Rules.IsDivisibleSign(msg))
+                {
+                    Error(true, msg);
                 }
             }
         }
@@ -128,7 +137,10 @@ namespace calc
                 {
                     Off(true, msg);
                 }
-                
+                else if (Rules.IsDivisibleSign(msg))
+                {
+                    Error(true, msg);
+                }
             }
         }
         void AccumulateDigitsWithDecimal(bool isInput, string msg)
@@ -161,7 +173,10 @@ namespace calc
                 {
                     Off(true, msg);
                 }
-                
+                else if (Rules.IsDivisibleSign(msg))
+                {
+                    Error(true, msg);
+                }
             }
         }
         void Compute(bool isInput, string msg)
@@ -169,7 +184,13 @@ namespace calc
             if (isInput)
             {
                 currentState = CalcState.Compute;
-                if (Rules.IsRootSign(msg)  || Rules.IsSquareSign(msg) || Rules.IsOneOverXSign(msg) || Rules.IsPlusMinus(msg) || Rules.IsDEL(msg))
+                if(operation.Length > 0 && (Rules.IsRootSign(msg) || Rules.IsSquareSign(msg) || Rules.IsOneOverXSign(msg) || Rules.IsPlusMinus(msg) || Rules.IsDEL(msg)))
+                {
+                    operation2 = msg;
+                    Calculate();
+                    operation2 = "";
+                }
+                else if (Rules.IsRootSign(msg)  || Rules.IsSquareSign(msg) || Rules.IsOneOverXSign(msg) || Rules.IsPlusMinus(msg) || Rules.IsDEL(msg))
                 {
                     operation = msg;
                     if (operation.Length > 0)
@@ -180,12 +201,25 @@ namespace calc
                     tempNumber = resultNumber;
                     operation = "";
                 }
+                else if((Rules.IsPercentSign(msg) || Rules.IsXPowerY(msg)) && operation.Length > 0)
+                {
+                    operation2 = msg;
+                    if(tempNumber2.Length == 0)
+                    {
+                        tempNumber2 = tempNumber;
+                        tempNumber = "";
+                    }
+                    else if(tempNumber.Length > 0 && tempNumber2.Length > 0)
+                    {
+                        Calculate();
+                        resultDelegate(tempNumber);
+                    }
+                }
                 else
                 {
                     if (operation.Length > 0)
                     {
                         Calculate();
-                        
                         resultDelegate(resultNumber);
                     }
                     else
@@ -214,7 +248,14 @@ namespace calc
                 {
                     Compute(true, msg);
                 }
-               
+                else if (Rules.IsDivisibleSign(msg))
+                {
+                    Error(true, msg);
+                }
+                else if (Rules.IsEqualSign(msg))
+                {
+                    Result(true, msg);
+                }
             }
         }
         void Result(bool isInput, string msg)
@@ -223,7 +264,6 @@ namespace calc
             {
                 currentState = CalcState.Result;
                 Calculate();
-                
                 resultDelegate(resultNumber);
             }
             else
@@ -261,7 +301,10 @@ namespace calc
                 {
                     Result(true,msg);
                 }
-                
+                else if (Rules.IsDivisibleSign(msg))
+                {
+                    Error(true, msg);
+                }
             }
         }
         void Off(bool isInput,string msg)
@@ -288,7 +331,7 @@ namespace calc
             if (isInput)
             {
                 currentState = CalcState.Error;
-                resultDelegate("ERROR");
+                resultDelegate(msg);
                 msg = "";
                 resultNumber = "";
                 tempNumber = "";
@@ -303,19 +346,19 @@ namespace calc
         }
         void Calculate()
         {
-            if (operation == "+")
+            if (operation == "+" && operation2 == "")
             {
-                resultNumber = (float.Parse(resultNumber) + double.Parse(tempNumber)).ToString();
+                resultNumber = (double.Parse(resultNumber) + double.Parse(tempNumber)).ToString();
             }
-            else if (operation == "-")
+            else if (operation == "-" && operation2 == "")
             {
-                resultNumber = (float.Parse(resultNumber) - double.Parse(tempNumber)).ToString();
+                resultNumber = (double.Parse(resultNumber) - double.Parse(tempNumber)).ToString();
             }
-            else if (operation == "*")
+            else if (operation == "*" && operation2 == "")
             {
-                resultNumber = (float.Parse(resultNumber) * double.Parse(tempNumber)).ToString();
+                resultNumber = (double.Parse(resultNumber) * double.Parse(tempNumber)).ToString();
             }
-            else if(operation == "x^y")
+            else if(operation == "x^y" && operation2 == "")
             {
                 double ans = 1;
                 double x = double.Parse(resultNumber);
@@ -326,38 +369,62 @@ namespace calc
                 }
                 resultNumber = ans.ToString();
             }
-            else if (operation == "/")
+            else if (operation == "%" && operation2 == "")
             {
-                if (Rules.IsZero(tempNumber))
+                resultNumber = ((double.Parse(resultNumber) * double.Parse(tempNumber)) / 100).ToString();
+            }
+            else if (operation2 == "x^y")
+            {
+                double ans = 1;
+                double x = double.Parse(tempNumber);
+                double y = double.Parse(tempNumber2);
+                for (int i = 1; i <= x; i++)
                 {
-                    Error(true, "ERROR");
+                    ans *= y;
                 }
-                else
-                {
-                    resultNumber = (float.Parse(resultNumber) / double.Parse(tempNumber)).ToString();
-                }
+                tempNumber = ans.ToString();
             }
-            else if (operation == "%")
+            else if (operation2 == "%")
             {
-                resultNumber = ((float.Parse(resultNumber) * double.Parse(tempNumber)) / 100).ToString();
+                tempNumber = ((double.Parse(tempNumber) * double.Parse(tempNumber2)) / 100).ToString();
             }
-            else if (operation == "V")
+            else if (operation == "/" && operation2 == "")
             {
-                resultNumber = ((Math.Sqrt(float.Parse(tempNumber)))).ToString();
+                resultNumber = (double.Parse(resultNumber) / double.Parse(tempNumber)).ToString();   
             }
-            else if(operation == "x^2")
+            else if (operation == "V" && operation2 == "")
             {
-                resultNumber = (float.Parse(tempNumber) * double.Parse(tempNumber)).ToString();
+                resultNumber = ((Math.Sqrt(double.Parse(tempNumber)))).ToString();
             }
-            else if(operation == "1/x")
+            else if(operation == "x^2" && operation2 == "")
             {
-                resultNumber = (float.Parse("1") / double.Parse(tempNumber)).ToString();
+                resultNumber = (double.Parse(tempNumber) * double.Parse(tempNumber)).ToString();
             }
-            else if(operation == "(+-)")
+            else if(operation == "1/x" && operation2 == "")
             {
-                resultNumber = (-float.Parse(tempNumber)).ToString();
+                resultNumber = (double.Parse("1") / double.Parse(tempNumber)).ToString();
             }
-            else if(operation == "DEL")
+            else if(operation == "(+-)" && operation2 == "")
+            {
+                resultNumber = (-double.Parse(tempNumber)).ToString();
+            }
+            else if (operation2 == "V")
+            {
+                tempNumber = ((Math.Sqrt(double.Parse(tempNumber)))).ToString();
+            }
+            else if (operation2 == "x^2")
+            {
+                tempNumber = (double.Parse(tempNumber) * double.Parse(tempNumber)).ToString();
+            }
+            else if (operation2 == "1/x")
+            {
+                tempNumber2 = (double.Parse("1") / double.Parse(tempNumber)).ToString();
+            }
+            else if (operation2 == "(+-)")
+            {
+                tempNumber = (-double.Parse(tempNumber)).ToString();
+            }
+            else if(operation == "DEL" && operation2 == "")
             {
                 if (tempNumber.Length == 1)
                 {
