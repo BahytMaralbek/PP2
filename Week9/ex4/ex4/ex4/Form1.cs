@@ -57,8 +57,8 @@ namespace ex4
             gp.AddLine(100, 100, 200, 200);
             gp.AddEllipse(100, 100, 200, 200);
             gp.AddRectangle(new Rectangle(100, 100, 200, 350));
-            //graphics.DrawPath(new Pen(color), gp);
-            graphics.FillPath(new Pen(color).Brush, gp);
+            graphics.DrawPath(new Pen(color), gp);
+            //graphics.FillPath(new Pen(color).Brush, gp);
             pictureBox1.Refresh();
         }
     }
