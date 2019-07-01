@@ -15,11 +15,6 @@ namespace animation4
         Graphics graphics;
         Point point = new Point(1,1);
         Size size = new Size(20, 20);
-        public enum Direction
-        {
-            right,left,down,up
-        }
-        Direction direction = Direction.right;
         public Form1()
         {
             InitializeComponent();
@@ -31,60 +26,42 @@ namespace animation4
 
         private void button2_Click(object sender, EventArgs e)
         {
-            timer2.Enabled = true;
+            timer2.Start();
             timer2.Interval = 1;
+            timer2.Tick += timer2_Tick;
         }
-
+        
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            CheckDirection();
-            switch (direction)
+            if(pictureBox1.Width - point.X == size.Width && point.Y!= pictureBox1.Height-20)
             {
-                case Direction.right:
-                    point.X = point.X + 1;
-                    pictureBox1.Refresh();
-                    break;
-                case Direction.left:
-                    point.X = point.X - 1;
-                    pictureBox1.Refresh();
-                    break;
-                case Direction.down:
-                    point.Y = point.Y + 1;
-                    pictureBox1.Refresh();
-                    break;
-                case Direction.up:
-                    point.Y = point.Y;
-                    pictureBox1.Refresh();
-                    break;
-                default:
-                    break;
+                point.Y++;
+                pictureBox1.Refresh();
+                
+            }
+            else if (point.Y==pictureBox1.Height-20 && point.X!=1)
+            {
+                point.X--;
+                pictureBox1.Refresh();
+    
+            }
+            else if (point.X == 1 && point.Y >1)
+            {
+                point.Y--;
+                pictureBox1.Refresh();
+             
+            }
+            else
+            {
+                point.X++;
+                pictureBox1.Refresh();
+             
             }
         }
         private void paint(object sender, PaintEventArgs e)
         {
-            SolidBrush solidBrush = new SolidBrush(Color.Pink);
-            graphics.FillRectangle(solidBrush, new Rectangle(point, size));
-        }
-
-        public void CheckDirection()
-        {
-            if(point.X == pictureBox1.Width - 1)
-            {
-                direction = Direction.down;
-            }
-            else if (point.Y == pictureBox1.Height - 1)
-            {
-                direction = Direction.left;
-            }
-            else if(point.X == 1)
-            {
-                direction = Direction.up;
-            }
-            else if (point.Y == 2)
-            {
-                direction = Direction.right;
-            }
+            graphics.DrawRectangle(new Pen(Color.Pink,3),new Rectangle(point,size));
         }
     }
 }

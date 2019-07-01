@@ -15,6 +15,7 @@ namespace calc
         Result,
         Error,
         Off,
+        ABCDEF
     }
 
     public delegate void ShowResultDelegate(string msg);
@@ -61,6 +62,8 @@ namespace calc
                 case CalcState.Off:
                     Off(false, msg);
                     break;
+                case CalcState.ABCDEF:
+
                 default:
                     break;
             }
@@ -101,6 +104,10 @@ namespace calc
                 {
                     Error(true, msg);
                 }
+                else if (Rules.ABCDEF(msg))
+                {
+                    ABCDEF(true, msg);
+                }
             }
         }
         void AccumulateDigits(bool isInput, string msg)
@@ -113,7 +120,7 @@ namespace calc
             }
             else
             {
-                if (Rules.IsDigit(msg))
+                if (Rules.IsDigit(msg) || Rules.ABCDEF(msg))
                 {
                     AccumulateDigits(true, msg);
                 }
@@ -140,6 +147,34 @@ namespace calc
                 else if (Rules.IsDivisibleSign(msg))
                 {
                     Error(true, msg);
+                }
+                else if (Rules.IsCheckComprSign(msg))
+                {
+                    Compute(true,msg);
+                }
+                else if (Rules.IsQuizSign(msg))
+                {
+                    Compute(true, msg);
+                }
+            }
+        }
+        void ABCDEF(bool isInput, string msg)
+        {
+            if (isInput)
+            {
+                tempNumber += msg;
+                currentState = CalcState.ABCDEF;
+                resultDelegate(msg);
+            }
+            else
+            {
+                if (Rules.ABCDEF(msg))
+                {
+                    ABCDEF(true, msg);
+                }
+                else if (Rules.IsQuizSign(msg))
+                {
+                    Compute(true, msg);
                 }
             }
         }
@@ -190,11 +225,12 @@ namespace calc
                     Calculate();
                     operation2 = "";
                 }
-                else if (Rules.IsRootSign(msg)  || Rules.IsSquareSign(msg) || Rules.IsOneOverXSign(msg) || Rules.IsPlusMinus(msg) || Rules.IsDEL(msg))
+                else if (Rules.IsRootSign(msg)  || Rules.IsSquareSign(msg) || Rules.IsOneOverXSign(msg) || Rules.IsPlusMinus(msg) || Rules.IsDEL(msg) || Rules.IsQuizSign(msg))
                 {
                     operation = msg;
                     if (operation.Length > 0)
                     {
+
                         Calculate();
                         resultDelegate(resultNumber);
                     }
@@ -219,7 +255,7 @@ namespace calc
                 {
                     if (operation.Length > 0)
                     {
-                        Calculate();
+                        CheckCompr();
                         resultDelegate(resultNumber);
                     }
                     else
@@ -264,6 +300,8 @@ namespace calc
             {
                 currentState = CalcState.Result;
                 Calculate();
+                CheckCompr();
+
                 resultDelegate(resultNumber);
             }
             else
@@ -342,6 +380,27 @@ namespace calc
                 {
                     Zero(true, msg);
                 }
+            }
+        }
+        void CheckCompr()
+        {
+            int ans = 0;
+            int a = int.Parse(resultNumber);
+            int b = int.Parse(tempNumber);
+            for(int i = 2; i <= 100000; i++)
+            {
+                if(a % i == 0 && b % i == 0)
+                {
+                    ans = i;
+                }
+            }
+            if(ans > 0)
+            {
+                resultNumber = ans.ToString();
+            }
+            else if(ans == 0)
+            {
+                resultNumber = "1";
             }
         }
         void Calculate()

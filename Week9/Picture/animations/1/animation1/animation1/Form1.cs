@@ -34,7 +34,7 @@ namespace animation1
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (point1.X != point2.X)
+            if (point2.X - point1.X != 50)
             {
                 point1.X += 10;
                 point2.X -= 10;
@@ -42,10 +42,16 @@ namespace animation1
             }
             else
             {
-                point1.X -= 10;
-                point2.X += 10;
-                Refresh();
+                timer1.Stop();
+                timer2.Start();
             }
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            point1.X -= 10;
+            point2.X += 10;
+            Refresh();
         }
     }
 }

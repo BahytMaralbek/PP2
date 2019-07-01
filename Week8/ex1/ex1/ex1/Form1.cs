@@ -21,5 +21,10 @@ namespace ex1
         {
             label1.Text = "testtest!!!!";
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
